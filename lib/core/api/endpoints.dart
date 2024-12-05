@@ -1,0 +1,17 @@
+import 'package:ricecare_mobile/core/secrets/app_secrets.dart';
+
+class Endpoints {
+  static const String baseUrl = AppSecrets.laravelBaseUrl;
+
+  static String fullUrl(String endpoint) {
+    final cleanedEndpoint =
+        endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+
+    return '$baseUrl/$cleanedEndpoint';
+  }
+
+  static final String userRegister = fullUrl('/register');
+  static final String userLogin = fullUrl('/login');
+  static final String userLogout = fullUrl('/logout');
+  static final String updateProfile = fullUrl('/update-profile');
+}
