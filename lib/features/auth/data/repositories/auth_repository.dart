@@ -26,7 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
           email: email,
           password: password,
         );
-        await _saveUserName(user.username);
+        await _saveUserName(user.username, user.profile_picture); // Simpan username ke SharedPreferences
         return user;
       },
     );
@@ -43,7 +43,7 @@ class AuthRepositoryImpl implements AuthRepository {
           email: email,
           password: password,
         );
-        await _saveUserName(user.username); // Simpan username ke SharedPreferences
+        await _saveUserName(user.username, user.profile_picture); // Simpan username ke SharedPreferences
         return user;
       },
     );
@@ -63,8 +63,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   /// Simpan nama pengguna ke SharedPreferences.
-  Future<void> _saveUserName(String username) async {
+  Future<void> _saveUserName(String username, String profile_picture) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
+    await prefs.setString('profile_picture', profile_picture);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ricecare_mobile/core/api/endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // API client class to handle HTTP requests
@@ -81,6 +82,17 @@ class ApiClient {
       headers['Authorization'] = 'Bearer $token';
     }
     return headers;
+  }
+
+  // Fetch user profile
+  Future<Map<String, dynamic>> fetchUserProfile() async {
+    final response = await get(Endpoints.userProfile);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load profile: ${response.statusCode}');
+    }
   }
 
 }

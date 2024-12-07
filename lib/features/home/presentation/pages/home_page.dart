@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ricecare_mobile/core/theme/app_pallete.dart';
-import 'package:ricecare_mobile/features/home/data/datasources/home_remote_data_source.dart';
-import 'package:ricecare_mobile/features/home/data/repositories/home_repository_impl.dart';
-import 'package:ricecare_mobile/features/home/domain/usecase/get_home_data.dart';
+import 'package:ricecare_mobile/core/commons/widgets/loader.dart';
+import 'package:ricecare_mobile/core/utils/show_snackbar.dart';
 import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
-import 'package:ricecare_mobile/features/home/presentation/bloc/home_event.dart';
-import 'package:ricecare_mobile/features/home/presentation/bloc/home_state.dart';
 import 'package:ricecare_mobile/features/home/presentation/widget/home_content.dart';
 import 'package:ricecare_mobile/features/home/presentation/widget/home_error.dart';
-import 'package:ricecare_mobile/features/home/presentation/widget/home_loading.dart';
 import 'package:ricecare_mobile/features/home/presentation/widget/navbar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../core/theme/app_pallete.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,14 +21,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeBloc _homeBloc;
   String? _userName; // Menyimpan nama pengguna yang dimuat dari SharedPreferences
+  String? _profilePicture; // Menyimpan nama pengguna yang dimuat dari SharedPreferences
 
   @override
   void initState() {
     super.initState();
-    _homeBloc = HomeBloc(
-      GetHomeData(HomeRepositoryImpl(HomeRemoteDataSourceImpl())),
-    );
-    _homeBloc.add(LoadHomeData());
+    _homeBloc = GetIt.instance<HomeBloc>();
+    _homeBloc.add(LoadHomeEvent()); // Memuat data saat halaman dimuat
     _loadUserName();
   }
 
@@ -38,13 +35,8 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _userName = prefs.getString('username') ?? 'Guest'; // Default "Guest" jika tidak ada userName
+      _profilePicture = prefs.getString('profile_picture'); // Default "Guest" jika tidak ada userName
     });
-  }
-
-  @override
-  void dispose() {
-    _homeBloc.close();
-    super.dispose();
   }
 
   @override
@@ -58,15 +50,13 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Gambar profil di kiri
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: CircleAvatar(
                     radius: 40, // Ukuran gambar profil lebih besar
-                    backgroundImage: AssetImage('assets/images/profile.png'),
+                    backgroundImage: _profilePicture != null ? NetworkImage(_profilePicture!) : null,
                   ),
                 ),
-                // Teks "Selamat datang" di sebelah kanan
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0), // Memberikan jarak antara gambar dan teks
                   child: Column(
@@ -91,21 +81,30 @@ class _HomePageState extends State<HomePage> {
       ),
       body: BlocProvider(
         create: (_) => _homeBloc,
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            if (state is HomeLoading) {
-              return const HomeLoadings(); // Menampilkan widget loading
-            } else if (state is HomeLoaded) {
-              return HomeContent(data: state.data); // Menampilkan konten halaman
-            } else if (state is HomeError) {
-              return HomeErrorWidget(message: state.message); // Menampilkan widget error
+        child: BlocConsumer<HomeBloc, HomeState>(
+          listener: (context, state) {
+            // Menangani HomeError, jika ada error
+            if (state is HomeErrorState) {
+              showSnackbar(context, state.message);
             }
-            return const Center();
+          },
+          builder: (context, state) {
+            if (state is HomeLoadingState) {
+              // Menampilkan loader saat data masih dimuat
+              return const Loader();
+            } else if (state is HomeLoadedState) {
+              // Menampilkan data jika berhasil dimuat
+              return HomeContent(data: state.home);
+            } else if (state is HomeErrorState) {
+              // Menampilkan error widget jika ada kesalahan
+              return HomeErrorWidget(message: state.message);
+            }
+            return const Center(child: CircularProgressIndicator()); // Default loading indicator jika tidak ada state yang cocok
           },
         ),
       ),
       backgroundColor: Colors.grey.shade100,
-      bottomNavigationBar: const NavbarWidget(initialIndex: 0), // Menampilkan Navbar
+      bottomNavigationBar: const NavbarWidget(initialIndex: 0),
     );
   }
 }

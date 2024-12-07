@@ -1,25 +1,17 @@
-import '../../domain/entities/home_entity.dart';
+import 'package:ricecare_mobile/features/home/domain/entities/home_entity.dart';
 
 class HomeModel extends HomeEntity {
   const HomeModel({
-    required super.detected,
-    required super.healthy,
-    required super.infected,
+    required super.total_deteksi,
+    required super.sakit,
+    required super.sehat,
   });
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) {
+  factory HomeModel.fromJson(Map<String, dynamic> map) {
     return HomeModel(
-      detected: json['detected'] as int,
-      healthy: json['healthy'] as int,
-      infected: json['infected'] as int,
+      total_deteksi: map['total_deteksi'] as int,
+      sakit: map['sakit'] as int,
+      sehat: map['sehat'] as int,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'detected': detected,
-      'healthy': healthy,
-      'infected': infected,
-    };
   }
 }

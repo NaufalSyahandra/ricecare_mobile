@@ -1,11 +1,11 @@
 class HomeEntity {
-  final int detected;
-  final int healthy;
-  final int infected;
+  final int total_deteksi;
+  final int sakit;
+  final int sehat;
 
   const HomeEntity({
-    required this.detected,
-    required this.healthy,
-    required this.infected,
+    required this.total_deteksi,
+    required this.sakit,
+    required this.sehat,
   });
 }

@@ -3,11 +3,14 @@ class User {
   final String email;
   final String name;
   final String username;
+  final String profile_picture;
+
 
   User({
     required this.id,
     required this.email,
     required this.name,
     required this.username,
+    required this.profile_picture,
   });
 }

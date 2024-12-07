@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:ricecare_mobile/features/home/presentation/pages/hama_penyakit_page.dart'; // Import halaman HamaPenyakitPage
 
 class HomeContent extends StatefulWidget {
-  final HomeEntity data;
+  final List<HomeEntity> data;
 
   const HomeContent({super.key, required this.data});
 
@@ -69,19 +69,19 @@ class _HomeContentState extends State<HomeContent> {
             children: [
               _buildInfoCard(
                 title: "Padi terdeteksi",
-                value: "${widget.data.detected}",
+                value: "${widget.data.fold(0, (sum, item) => sum + item.total_deteksi)}",
                 imagePath: "assets/images/search.png",
               ),
               const SizedBox(width: 8),
               _buildInfoCard(
                 title: "Padi sehat",
-                value: "${widget.data.healthy}",
+                value: "${widget.data.fold(0, (sum, item) => sum + item.sehat)}",
                 imagePath: "assets/images/padi_sehat.png",
               ),
               const SizedBox(width: 8),
               _buildInfoCard(
                 title: "Padi sakit",
-                value: "${widget.data.infected}",
+                value: "${widget.data.fold(0, (sum, item) => sum + item.sakit)}",
                 imagePath: "assets/images/padi_sakit.png",
               ),
             ],
@@ -98,7 +98,7 @@ class _HomeContentState extends State<HomeContent> {
                     _buildScrollableCard(
                         imagePath: "assets/images/Frame2608559.png",
                         link:
-                            "https://medium.com/@xenovandestra/tanaman-pepohonan-anti-hama-untuk-melindungi-padi-oryza-sativa-dari-berbagai-jenis-serangan-hama-69b620803a87"),
+                        "https://medium.com/@xenovandestra/tanaman-pepohonan-anti-hama-untuk-melindungi-padi-oryza-sativa-dari-berbagai-jenis-serangan-hama-69b620803a87"),
                     _buildScrollableCard(
                         imagePath: "assets/images/Frame2608560.png",
                         link: "https://example.com/page2"),
@@ -152,7 +152,7 @@ class _HomeContentState extends State<HomeContent> {
           ),
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,

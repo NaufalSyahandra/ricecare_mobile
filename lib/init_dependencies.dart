@@ -7,6 +7,11 @@ import 'package:ricecare_mobile/features/account/domain/usecases/account_logout.
 import 'package:ricecare_mobile/features/account/domain/usecases/fetch_profile.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/update_profile.dart';
 import 'package:ricecare_mobile/features/account/presentation/bloc/account_bloc.dart';
+import 'package:ricecare_mobile/features/home/data/datasources/home_remote_data_source.dart';
+import 'package:ricecare_mobile/features/home/data/repositories/home_repository_impl.dart';
+import 'package:ricecare_mobile/features/home/domain/repositories/home_repository.dart';
+import 'package:ricecare_mobile/features/home/domain/usecase/get_home_data.dart';
+import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ricecare_mobile/core/api/api_client.dart';
 import 'package:ricecare_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -33,6 +38,7 @@ Future<void> initDependencies() async {
 
   _initAuth();
   _initAccount();
+  _initHome();
 }
 
 void _initAuth() {
@@ -48,8 +54,10 @@ void _initAuth() {
 
   // Use cases
     ..registerFactory<UserSignup>(() =>
-        UserSignup(serviceLocator()))..registerFactory<UserSignIn>(() =>
-      UserSignIn(serviceLocator()))
+        UserSignup(serviceLocator()))
+
+    ..registerFactory<UserSignIn>(() =>
+        UserSignIn(serviceLocator()))
 
   // Bloc
     ..registerFactory<AuthBloc>(() =>
@@ -74,10 +82,10 @@ void _initAccount() {
             () => AccountLogout(serviceLocator()))
 
     ..registerFactory<FetchProfile>(
-          () => FetchProfile(serviceLocator()))
+            () => FetchProfile(serviceLocator()))
 
     ..registerFactory<UpdateProfile>(
-          () => UpdateProfile(serviceLocator()))
+            () => UpdateProfile(serviceLocator()))
 
   // ..registerFactory<UpdatePassword>(
   //         () => UpdatePassword(serviceLocator())
@@ -92,4 +100,12 @@ void _initAccount() {
             // updatePassword: serviceLocator()
           ),
     );
+}
+
+void _initHome() {
+  serviceLocator
+    ..registerFactory<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(serviceLocator<ApiClient>()))
+    ..registerFactory<HomeRepository>(() => HomeRepositoryImpl(serviceLocator<HomeRemoteDataSource>()))
+    ..registerFactory<GetHomeData>(() => GetHomeData(serviceLocator<HomeRepository>()))
+    ..registerFactory<HomeBloc>(() => HomeBloc(getHomeData: serviceLocator<GetHomeData>()));
 }

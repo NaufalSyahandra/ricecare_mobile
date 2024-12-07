@@ -1,12 +1,13 @@
 import 'package:ricecare_mobile/features/auth/domain/entities/user.dart';
 
 class UserModel extends User {
-  UserModel(
-      {required super.id,
-      required super.email,
-      required super.name,
-      required super.username,
-      });
+  UserModel({
+    required super.id,
+    required super.email,
+    required super.name,
+    required super.username,
+    required super.profile_picture,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
@@ -14,6 +15,7 @@ class UserModel extends User {
       email: map['email'] ?? '',
       name: map['name'] ?? '',
       username: map['username'] ?? '',
+      profile_picture: map['profile_picture'] ?? '',
     );
   }
 }

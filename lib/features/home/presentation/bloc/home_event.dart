@@ -1,9 +1,5 @@
-import 'package:equatable/equatable.dart';
+part of 'home_bloc.dart';
 
-abstract class HomeEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+abstract class HomeEvent {}
 
-// Event untuk memuat data awal di halaman Home
-class LoadHomeData extends HomeEvent {}
+class LoadHomeEvent extends HomeEvent {}

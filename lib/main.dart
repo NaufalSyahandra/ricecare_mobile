@@ -6,6 +6,7 @@ import 'package:ricecare_mobile/features/auth/data/datasources/auth_remote_datas
 import 'package:ricecare_mobile/features/auth/data/repositories/auth_repository.dart';
 import 'package:ricecare_mobile/features/auth/presentation/pages/signin_page.dart';
 import 'package:ricecare_mobile/features/auth/presentation/pages/signup_page.dart';
+import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ricecare_mobile/init_dependencies.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -31,6 +32,10 @@ void main() async {
       // Register AccountBloc
       BlocProvider(
         create: (context) => serviceLocator<AccountBloc>(),
+      ),
+
+      BlocProvider(
+        create: (context) => serviceLocator<HomeBloc>(),
       ),
     ],
     child: const MyApp(),

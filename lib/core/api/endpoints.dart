@@ -14,4 +14,6 @@ class Endpoints {
   static final String userLogin = fullUrl('/login');
   static final String userLogout = fullUrl('/logout');
   static final String updateProfile = fullUrl('/update-profile');
+  static final String userProfile = fullUrl('/profile');
+  static final String getHistory = fullUrl('/get-history');
 }
