@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricecare_mobile/core/utils/show_snackbar.dart';
+import 'package:ricecare_mobile/features/account/presentation/bloc/account_bloc.dart';
+import 'package:ricecare_mobile/features/account/presentation/widget/profile_avatar_widget.dart';
+import 'package:ricecare_mobile/features/account/presentation/widget/profile_form_widget.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   @override
-  State<EditProfilePage> createState() => _ProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _ProfilePageState extends State<EditProfilePage> {
-  File? _image;
+class _EditProfilePageState extends State<EditProfilePage> {
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-    await picker.pickImage(source: ImageSource.gallery);
+  @override
+  void initState() {
+    super.initState();
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+    // Mengisi controller dengan data awal dari AccountBloc
+    final state = context.read<AccountBloc>().state;
+    if (state is AccountProfileLoad) {
+      _nameController.text = state.accountProfile.name;
+      _usernameController.text = state.accountProfile.username;
+      _emailController.text = state.accountProfile.email;
     }
   }
 
@@ -36,90 +42,85 @@ class _ProfilePageState extends State<EditProfilePage> {
         backgroundColor: const Color(0xFF15B392),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 80.0,
-                  backgroundImage: _image != null
-                      ? FileImage(_image!)
-                      : const AssetImage('assets/images/profile.png') as ImageProvider,
+      body: BlocListener<AccountBloc, AccountState>(
+        listener: (context, state) {
+          if (state is AccountProfileSaved) {
+            showSnackbar(context, 'Profile updated successfully!');
+            Navigator.pop(context, true);
+          } else if (state is AccountFailure) {
+            showSnackbar(context, state.message);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const ProfileAvatarWidget(),
+                const SizedBox(height: 15),
+                ProfileFormWidget(
+                  nameController: _nameController,
+                  emailController: _emailController,
+                  usernameController: _usernameController,
                 ),
-              ),
-              const SizedBox(height: 15),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Nama',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Farmer',
-                      border: OutlineInputBorder(),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_nameController.text.isEmpty ||
+                        _usernameController.text.isEmpty ||
+                        _emailController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Harap isi semua kolom")),
+                      );
+                      return;
+                    }
+                    context.read<AccountBloc>().add(
+                          UpdatingProfile(
+                            name: _nameController.text,
+                            username: _usernameController.text,
+                            email: _emailController.text,
+                          ),
+                        );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF15B392),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 85,
+                      vertical: 18,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Email',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  child: const Text(
+                    'Simpan Perubahan',
+                    style: TextStyle(color: Colors.white),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'farmer@gmail.com',
-                      border: OutlineInputBorder(),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Batal',
+                    style: TextStyle(
+                      color: Color(0xFF15B392),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Password',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Enter password',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF15B392),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 85, vertical: 18),
                 ),
-                child: const Text(
-                  'Simpan Perubahan',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Batal',
-                  style: TextStyle(
-                    color: Color(0xFF15B392),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    super.dispose();
   }
 }

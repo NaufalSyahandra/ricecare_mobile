@@ -3,7 +3,7 @@ part of 'account_bloc.dart';
 @immutable
 sealed class AccountEvent {}
 
-final class Logout extends AccountEvent{}
+// final class Logout extends AccountEvent{}
 
 final class FetchingProfile extends AccountEvent{}
 

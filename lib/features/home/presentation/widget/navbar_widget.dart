@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ricecare_mobile/core/theme/app_pallete.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ricecare_mobile/features/account/domain/entities/account.dart';
 import 'package:ricecare_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:ricecare_mobile/features/account/presentation/pages/account_page.dart';
 
@@ -35,7 +36,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     } else if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AccountPage()), // Navigasi ke ProfilePage
+        MaterialPageRoute(
+          builder: (context) => const AccountPage(),
+        ),
       );
     }
   }
@@ -95,7 +98,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
             ),
             _buildNavItem(
               icon: Icons.account_circle,
-              label: 'Profile',  // Label untuk profile
+              label: 'Profile', // Label untuk profile
               index: 4,
             ),
           ],

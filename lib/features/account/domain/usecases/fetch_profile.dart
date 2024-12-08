@@ -10,7 +10,7 @@ class FetchProfile implements UseCase<Account, NoParams> {
   FetchProfile(this.accountRepository);
 
   @override
-  Future<Either<Failure, Account>> call(NoParams params) async {
+  Future<Either<Failure, Account>> call(NoParams params) {
     return accountRepository.fetchProfile();
   }
 }

@@ -5,6 +5,7 @@ class AccountModel extends Account {
     required super.email,
     required super.name,
     required super.username,
+    required super.profile_picture,
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> map) {
@@ -12,6 +13,7 @@ class AccountModel extends Account {
       email: map['email'] ?? '',
       name: map['name'] ?? '',
       username: map['username'] ?? '',
+      profile_picture: map['profile_picture'] ?? '',
     );
   }
 }

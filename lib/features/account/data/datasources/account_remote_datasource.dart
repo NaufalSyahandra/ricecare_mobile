@@ -6,7 +6,7 @@ import 'package:ricecare_mobile/core/error/exception.dart';
 import 'package:ricecare_mobile/features/account/data/models/account_model.dart';
 
 abstract interface class AccountRemoteDataSources {
-  Future<void> logout();
+  // Future<void> logout();
 
   Future<AccountModel> fetchProfile();
 
@@ -15,6 +15,7 @@ abstract interface class AccountRemoteDataSources {
     required String email,
     required String username,
   });
+
 // Future<void>updatingPassword(PasswordParam params);
 }
 
@@ -23,21 +24,21 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
 
   AccountRemoteDataSourcesImpl(this.apiClient);
 
-  @override
-  Future<void> logout() async {
-    final response = await apiClient.post(Endpoints.userLogout);
-
-    if (response.statusCode != 200) {
-      final errorMessage = json.decode(response.body);
-      throw ServerException('Gagal Logout: ${errorMessage['message']}');
-    }
-
-    apiClient.clearToken();
-  }
+  // @override
+  // Future<void> logout() async {
+  //   final response = await apiClient.post(Endpoints.userLogout);
+  //
+  //   if (response.statusCode != 200) {
+  //     final errorMessage = json.decode(response.body);
+  //     throw ServerException('Gagal Logout: ${errorMessage['message']}');
+  //   }
+  //
+  //   apiClient.clearToken();
+  // }
 
   @override
   Future<AccountModel> fetchProfile() async {
-    final response = await apiClient.get(Endpoints.updateProfile);
+    final response = await apiClient.get(Endpoints.userProfile);
 
     if (response.statusCode != 200) {
       final errorMessage = json.decode(response.body);
@@ -46,9 +47,7 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
 
     final jsonResponse = json.decode(response.body);
 
-    final profileData = jsonResponse['data'];
-
-    return AccountModel.fromJson(profileData);
+    return AccountModel.fromJson(jsonResponse);
   }
 
   @override
@@ -67,23 +66,21 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
 
     final jsonResponse = json.decode(response.body);
 
-    final profileData = jsonResponse['data'];
-
-    return AccountModel.fromJson(profileData);
+    return AccountModel.fromJson(jsonResponse);
   }
 
-  // @override
-  // Future<void> updatingPassword(PasswordParam params) async {
-  //   final response = await apiClient.put(Endpoints.updatePassword, body: {
-  //     'old_password': params.oldPassword,
-  //     'password': params.newPassword,
-  //     'password_confirmation': params.passwordConfirmation
-  //   });
-  //
-  //   if (response.statusCode != 204) {
-  //     final errorMessage = json.decode(response.body);
-  //     throw ServerException(
-  //         'Gagal update password: ${errorMessage['message']}');
-  //   }
-  // }
+// @override
+// Future<void> updatingPassword(PasswordParam params) async {
+//   final response = await apiClient.put(Endpoints.updatePassword, body: {
+//     'old_password': params.oldPassword,
+//     'password': params.newPassword,
+//     'password_confirmation': params.passwordConfirmation
+//   });
+//
+//   if (response.statusCode != 204) {
+//     final errorMessage = json.decode(response.body);
+//     throw ServerException(
+//         'Gagal update password: ${errorMessage['message']}');
+//   }
+// }
 }
