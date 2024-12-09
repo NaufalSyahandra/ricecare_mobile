@@ -7,6 +7,11 @@ import 'package:ricecare_mobile/features/account/domain/usecases/account_logout.
 import 'package:ricecare_mobile/features/account/domain/usecases/fetch_profile.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/update_profile.dart';
 import 'package:ricecare_mobile/features/account/presentation/bloc/account_bloc.dart';
+import 'package:ricecare_mobile/features/history/data/datasources/history_remote_datasource.dart';
+import 'package:ricecare_mobile/features/history/data/repositories/history_repository_impl.dart';
+import 'package:ricecare_mobile/features/history/domain/repositories/history_repository.dart';
+import 'package:ricecare_mobile/features/history/domain/usecase/get_detection_history.dart';
+import 'package:ricecare_mobile/features/history/presentation/bloc/history_bloc.dart';
 import 'package:ricecare_mobile/features/home/data/datasources/home_remote_data_source.dart';
 import 'package:ricecare_mobile/features/home/data/repositories/home_repository_impl.dart';
 import 'package:ricecare_mobile/features/home/domain/repositories/home_repository.dart';
@@ -39,6 +44,7 @@ Future<void> initDependencies() async {
   _initAuth();
   _initAccount();
   _initHome();
+  _initHistory();
 }
 
 void _initAuth() {
@@ -108,4 +114,26 @@ void _initHome() {
     ..registerFactory<HomeRepository>(() => HomeRepositoryImpl(serviceLocator<HomeRemoteDataSource>()))
     ..registerFactory<GetHomeData>(() => GetHomeData(serviceLocator<HomeRepository>()))
     ..registerFactory<HomeBloc>(() => HomeBloc(getHomeData: serviceLocator<GetHomeData>()));
+}
+
+void _initHistory() {
+  serviceLocator
+  // Data Source
+    ..registerFactory<HistoryRemoteDatasource>(
+          () => HistoryRemoteDatasourceImpl(serviceLocator<ApiClient>()),
+    )
+  // Repository
+    ..registerFactory<HistoryRepository>(
+          () => HistoryRepositoryImpl(serviceLocator()),
+    )
+  // UseCase
+    ..registerFactory<GetDetectionHistory>(
+          () => GetDetectionHistory(repository: serviceLocator()),
+    )
+  // Bloc
+    ..registerFactory<HistoryBloc>(
+          () => HistoryBloc(
+        getDetectionHistory: serviceLocator(),
+      ),
+    );
 }

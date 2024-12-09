@@ -16,6 +16,7 @@ class Endpoints {
   static final String updateProfile = fullUrl('/update-profile');
   static final String userProfile = fullUrl('/profile');
   static final String getHistory = fullUrl('/get-history');
+  static final String getDetectionHistory = fullUrl('/get-detection-history');
   static String checkUsernameAvailability(String username) => fullUrl('check-username-availability?username=$username');
   static String checkEmailAvailability(String email) => fullUrl('check-username-availability?email=$email');
 }

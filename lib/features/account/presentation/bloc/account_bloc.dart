@@ -14,7 +14,7 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final FetchProfile _fetchProfile;
   final UpdateProfile _updateProfile;
-  Account? _originalAccountProfile; // Store original profile
+  Account? _originalAccountProfile;
 
   AccountBloc({
     required FetchProfile fetchProfile,
@@ -36,7 +36,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     response.fold(
           (failure) => emit(AccountFailure(failure.message)),
           (accountProfile) {
-        _originalAccountProfile = accountProfile; // Store original
+        _originalAccountProfile = accountProfile;
         emit(AccountProfileLoad(accountProfile));
       },
     );
@@ -59,7 +59,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           (updatedAccount) {
         emit(AccountProfileSaved(updatedAccount));
         emit(AccountProfileLoad(updatedAccount));
-        _originalAccountProfile = updatedAccount; // Update original
+        _originalAccountProfile = updatedAccount;
       },
     );
   }
@@ -67,7 +67,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future<void> _onResetAccountState(
       ResetAccountState event, Emitter<AccountState> emit) async {
     if (_originalAccountProfile != null) {
-      emit(AccountProfileLoad(_originalAccountProfile!)); // Emit original state
+      emit(AccountProfileLoad(_originalAccountProfile!));
     } else {
       emit(AccountInitial());
     }
