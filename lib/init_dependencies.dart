@@ -5,6 +5,7 @@ import 'package:ricecare_mobile/features/account/data/repositories/account_repos
 import 'package:ricecare_mobile/features/account/domain/repositories/account_repository.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/account_logout.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/fetch_profile.dart';
+import 'package:ricecare_mobile/features/account/domain/usecases/update_password.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/update_profile.dart';
 import 'package:ricecare_mobile/features/account/presentation/bloc/account_bloc.dart';
 import 'package:ricecare_mobile/features/history/data/datasources/history_remote_datasource.dart';
@@ -93,9 +94,9 @@ void _initAccount() {
     ..registerFactory<UpdateProfile>(
             () => UpdateProfile(serviceLocator()))
 
-  // ..registerFactory<UpdatePassword>(
-  //         () => UpdatePassword(serviceLocator())
-  // )
+  ..registerFactory<UpdatePassword>(
+          () => UpdatePassword(serviceLocator())
+  )
   // Bloc
     ..registerFactory<AccountBloc>(
           () =>
@@ -103,7 +104,7 @@ void _initAccount() {
             fetchProfile: serviceLocator(),
             // accountLogout: serviceLocator(),
             updateProfile: serviceLocator(),
-            // updatePassword: serviceLocator()
+            updatePassword: serviceLocator()
           ),
     );
 }

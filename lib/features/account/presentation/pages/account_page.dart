@@ -28,8 +28,11 @@ class AccountPage extends StatelessWidget {
             );
           } else if (state is AccountFailure) {
             return Center(child: Text(state.message));
+          } else {
+            // Jika tidak ada data, bisa melakukan fetch lagi
+            context.read<AccountBloc>().add(FetchingProfile());
+            return const Center(child: CircularProgressIndicator());
           }
-          return const Center(child: Text('No data available.'));
         },
       ),
       bottomNavigationBar: const NavbarWidget(initialIndex: 4),

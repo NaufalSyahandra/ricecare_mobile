@@ -4,6 +4,7 @@ import 'package:ricecare_mobile/core/error/failure.dart';
 import 'package:ricecare_mobile/features/account/data/datasources/account_remote_datasource.dart';
 import 'package:ricecare_mobile/features/account/domain/entities/account.dart';
 import 'package:ricecare_mobile/features/account/domain/repositories/account_repository.dart';
+import 'package:ricecare_mobile/features/account/domain/usecases/update_password.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   final AccountRemoteDataSources remoteDataSources;
@@ -47,13 +48,13 @@ class AccountRepositoryImpl implements AccountRepository {
     }
   }
 
-  // @override
-  // Future<Either<Failure, void>> updatePassword(PasswordParam params) async {
-  //   try {
-  //     return Right(await remoteDatasources.updatingPassword(params));
-  //   } on ServerException catch (e) {
-  //     return Left(Failure(e.message));
-  //   }
-  // }
+  @override
+  Future<Either<Failure, void>> updatePassword(PasswordParam params) async {
+    try {
+      return Right(await remoteDataSources.updatingPassword(params));
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
 
 }

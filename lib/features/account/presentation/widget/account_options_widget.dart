@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ricecare_mobile/features/account/presentation/pages/change_password_page.dart';
 import 'package:ricecare_mobile/features/account/presentation/pages/edit_profile_page.dart';
 
 class AccountOptionsWidget extends StatelessWidget {
@@ -36,10 +37,14 @@ class AccountOptionsWidget extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             ListTile(
-              title: const Text('Ganti Sandi'),
+              title: const Text('Ubah Password'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // Implementasi Ganti Sandi
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChangePasswordPage()),
+                );
               },
             ),
             const Divider(thickness: 1),

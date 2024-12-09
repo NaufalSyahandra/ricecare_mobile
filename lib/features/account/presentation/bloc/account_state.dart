@@ -24,3 +24,6 @@ final class AccountProfileSaved extends AccountState {
 
   AccountProfileSaved(this.accountProfile);
 }
+
+final class PasswordUpdated extends AccountState {}
+

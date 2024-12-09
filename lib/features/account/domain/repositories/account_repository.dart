@@ -1,6 +1,7 @@
 import 'package:either_dart/either.dart';
 import 'package:ricecare_mobile/core/error/failure.dart';
 import 'package:ricecare_mobile/features/account/domain/entities/account.dart';
+import 'package:ricecare_mobile/features/account/domain/usecases/update_password.dart';
 
 abstract interface class AccountRepository {
   // Future<Either<Failure, void>> logout();
@@ -10,5 +11,5 @@ abstract interface class AccountRepository {
     required String username,
     required String email
   });
-  // Future<void>updatingPassword(PasswordParam params);
+  Future<Either<Failure, void>> updatePassword(PasswordParam params);
 }

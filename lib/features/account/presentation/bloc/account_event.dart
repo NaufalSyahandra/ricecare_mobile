@@ -18,3 +18,11 @@ final class UpdatingProfile extends AccountEvent {
 }
 
 final class ResetAccountState extends AccountEvent {}
+
+final class UpdatingPassword extends AccountEvent {
+  final PasswordParam params;
+
+  UpdatingPassword({
+    required this.params
+  });
+}
