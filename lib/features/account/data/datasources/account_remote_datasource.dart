@@ -56,8 +56,14 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
     required String username,
     required String email,
   }) async {
-    final response = await apiClient.put(Endpoints.updateProfile,
-        body: {'name': name, 'username': username, 'email': email});
+    final response = await apiClient.put(
+        Endpoints.updateProfile,
+        body: {
+          'username': username,
+          'name': name,
+          'email': email
+        }
+    );
 
     if (response.statusCode != 200) {
       final errorMessage = json.decode(response.body);
@@ -65,6 +71,7 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
     }
 
     final jsonResponse = json.decode(response.body);
+
 
     return AccountModel.fromJson(jsonResponse);
   }

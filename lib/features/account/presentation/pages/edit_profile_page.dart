@@ -21,7 +21,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
 
-    // Mengisi controller dengan data awal dari AccountBloc
     final state = context.read<AccountBloc>().state;
     if (state is AccountProfileLoad) {
       _nameController.text = state.accountProfile.name;
@@ -70,9 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     if (_nameController.text.isEmpty ||
                         _usernameController.text.isEmpty ||
                         _emailController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Harap isi semua kolom")),
-                      );
+                      showSnackbar(context, "Harap isi semua kolom");
                       return;
                     }
                     context.read<AccountBloc>().add(
@@ -98,6 +95,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
+                    context.read<AccountBloc>().add(ResetAccountState());
                     Navigator.pop(context);
                   },
                   child: const Text(

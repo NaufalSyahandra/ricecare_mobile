@@ -3,11 +3,9 @@ part of 'account_bloc.dart';
 @immutable
 sealed class AccountEvent {}
 
-// final class Logout extends AccountEvent{}
+final class FetchingProfile extends AccountEvent {}
 
-final class FetchingProfile extends AccountEvent{}
-
-final class UpdatingProfile extends AccountEvent{
+final class UpdatingProfile extends AccountEvent {
   final String username;
   final String name;
   final String email;
@@ -18,3 +16,5 @@ final class UpdatingProfile extends AccountEvent{
     required this.email,
   });
 }
+
+final class ResetAccountState extends AccountEvent {}
