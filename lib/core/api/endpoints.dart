@@ -18,6 +18,7 @@ class Endpoints {
   static final String userProfile = fullUrl('/profile');
   static final String getHistory = fullUrl('/get-history');
   static final String getDetectionHistory = fullUrl('/get-detection-history');
+  static final String scan = fullUrl('/upload-image');
   static String checkUsernameAvailability(String username) => fullUrl('check-username-availability?username=$username');
   static String checkEmailAvailability(String email) => fullUrl('check-username-availability?email=$email');
 }

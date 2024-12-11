@@ -5,6 +5,8 @@ sealed class AccountEvent {}
 
 final class FetchingProfile extends AccountEvent {}
 
+final class Logout extends AccountEvent {}
+
 final class UpdatingProfile extends AccountEvent {
   final String username;
   final String name;

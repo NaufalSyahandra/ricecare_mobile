@@ -7,6 +7,8 @@ class Failure {
   String toString() => message;
 }
 
+class NetworkFailure extends Failure {}
+
 class UsernameAlreadyExistsFailure extends Failure {
   List<Object> get props => [];
 }

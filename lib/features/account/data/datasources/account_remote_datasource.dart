@@ -7,7 +7,6 @@ import 'package:ricecare_mobile/features/account/data/models/account_model.dart'
 import 'package:ricecare_mobile/features/account/domain/usecases/update_password.dart';
 
 abstract interface class AccountRemoteDataSources {
-  // Future<void> logout();
 
   Future<AccountModel> fetchProfile();
 
@@ -17,7 +16,9 @@ abstract interface class AccountRemoteDataSources {
     required String username,
   });
 
-Future<void>updatingPassword(PasswordParam params);
+  Future<void> logout();
+
+  Future<void>updatingPassword(PasswordParam params);
 }
 
 class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
@@ -25,17 +26,17 @@ class AccountRemoteDataSourcesImpl extends AccountRemoteDataSources {
 
   AccountRemoteDataSourcesImpl(this.apiClient);
 
-  // @override
-  // Future<void> logout() async {
-  //   final response = await apiClient.post(Endpoints.userLogout);
-  //
-  //   if (response.statusCode != 200) {
-  //     final errorMessage = json.decode(response.body);
-  //     throw ServerException('Gagal Logout: ${errorMessage['message']}');
-  //   }
-  //
-  //   apiClient.clearToken();
-  // }
+  @override
+  Future<void> logout() async {
+    final response = await apiClient.post(Endpoints.userLogout);
+
+    if (response.statusCode != 204) {
+      final errorMessage = json.decode(response.body);
+      throw ServerException('Gagal Logout: ${errorMessage['message']}');
+    }
+
+    apiClient.clearToken();
+  }
 
   @override
   Future<AccountModel> fetchProfile() async {

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ricecare_mobile/features/account/presentation/pages/change_password_page.dart';
 import 'package:ricecare_mobile/features/account/presentation/pages/edit_profile_page.dart';
 
 class AccountOptionsWidget extends StatelessWidget {
-  const AccountOptionsWidget({super.key});
+  final VoidCallback onLogout;
+
+  const AccountOptionsWidget({super.key, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,10 @@ class AccountOptionsWidget extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: const Text('Edit Profile'),
+              title: Text(
+                'Edit Profile',
+                style: GoogleFonts.poppins(),
+              ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(
@@ -37,7 +43,10 @@ class AccountOptionsWidget extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             ListTile(
-              title: const Text('Ubah Password'),
+              title: Text(
+                'Ubah Password',
+                style: GoogleFonts.poppins(),
+              ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(
@@ -49,15 +58,28 @@ class AccountOptionsWidget extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             ListTile(
-              title: const Text('Tentang kita'),
-              trailing: Image.asset(
-                'assets/images/logout.png',
-                height: 24,
-                width: 24,
+              title: Text(
+                'Tentang kita',
+                style: GoogleFonts.poppins(),
               ),
+              trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 // Implementasi Tentang Kita
               },
+            ),
+            const Divider(thickness: 1),
+            const SizedBox(height: 20), // Add space before the logout button
+            const Divider(thickness: 1), // Divider before logout option
+            ListTile(
+              title: Text(
+                'Keluar',
+                style: GoogleFonts.poppins(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              trailing: const Icon(Icons.logout, color: Colors.red),
+              onTap: onLogout,
             ),
           ],
         ),

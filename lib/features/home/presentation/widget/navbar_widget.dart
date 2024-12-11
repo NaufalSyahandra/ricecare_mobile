@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ricecare_mobile/features/history/presentation/pages/history_page.dart';
 import 'package:ricecare_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:ricecare_mobile/features/account/presentation/pages/account_page.dart';
+import 'package:ricecare_mobile/features/scan/presentation/page/scan_page.dart';
 
 class NavbarWidget extends StatefulWidget {
   final int initialIndex;
@@ -38,6 +39,13 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(
           builder: (context) => const HistoryPage(),
+        ),
+      );
+    } else if (index == 2) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ScanPage(),
         ),
       );
     } else if (index == 4) {

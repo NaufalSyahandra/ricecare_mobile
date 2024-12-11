@@ -49,11 +49,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     }
 
     final jsonResponse = json.decode(response.body);
-
     final userData = jsonResponse['data'];
-    String token = jsonResponse['token'];
-
-    apiClient.setToken(token);
 
     return UserModel.fromJson(userData);
   }

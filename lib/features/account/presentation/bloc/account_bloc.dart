@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ricecare_mobile/core/error/failure.dart';
 import 'package:ricecare_mobile/core/usecase/usecase.dart';
 import 'package:ricecare_mobile/features/account/domain/entities/account.dart';
+import 'package:ricecare_mobile/features/account/domain/usecases/account_logout.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/fetch_profile.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/update_password.dart';
 import 'package:ricecare_mobile/features/account/domain/usecases/update_profile.dart';
@@ -13,6 +14,7 @@ part 'account_event.dart';
 part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
+  final AccountLogout _accountLogout;
   final FetchProfile _fetchProfile;
   final UpdateProfile _updateProfile;
   final UpdatePassword _updatePassword;
@@ -20,16 +22,35 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   AccountBloc({
     required FetchProfile fetchProfile,
+    required AccountLogout accountLogout,
     required UpdateProfile updateProfile,
     required UpdatePassword updatePassword,
   })  : _fetchProfile = fetchProfile,
+        _accountLogout = accountLogout,
         _updateProfile = updateProfile,
         _updatePassword = updatePassword,
         super(AccountInitial()) {
     on<FetchingProfile>(_onAccountProfileLoad);
     on<UpdatingProfile>(_onUpdatedProfile);
+    on<Logout>(_onAccountLogout);
     on<ResetAccountState>(_onResetAccountState);
     on<UpdatingPassword>(_onUpdatedPassword);
+  }
+
+  Future<void> _onAccountLogout(
+      Logout event,
+      Emitter<AccountState> emit
+      ) async {
+    emit(AccountLoading());
+
+    final response = await _accountLogout(
+        NoParams()
+    );
+
+    response.fold(
+          (failure) => emit(AccountFailure(failure.message)),
+          (_) => emit(AccountLoggedOut()),
+    );
   }
 
   Future<void> _onAccountProfileLoad(

@@ -85,8 +85,8 @@ void _initAccount() {
           () => AccountRepositoryImpl(serviceLocator()),
     )
   // UseCase
-  //   ..registerFactory<AccountLogout>(
-  //           () => AccountLogout(serviceLocator()))
+    ..registerFactory<AccountLogout>(
+            () => AccountLogout(serviceLocator()))
 
     ..registerFactory<FetchProfile>(
             () => FetchProfile(serviceLocator()))
@@ -102,7 +102,7 @@ void _initAccount() {
           () =>
           AccountBloc(
             fetchProfile: serviceLocator(),
-            // accountLogout: serviceLocator(),
+            accountLogout: serviceLocator(),
             updateProfile: serviceLocator(),
             updatePassword: serviceLocator()
           ),

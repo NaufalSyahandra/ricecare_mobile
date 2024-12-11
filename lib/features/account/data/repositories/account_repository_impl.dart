@@ -11,15 +11,15 @@ class AccountRepositoryImpl implements AccountRepository {
 
   AccountRepositoryImpl(this.remoteDataSources);
 
-  // @override
-  // Future<Either<Failure, void>> logout() async {
-  //   try {
-  //     await remoteDataSources.logout();
-  //     return const Right(null);
-  //   } on ServerException catch (e) {
-  //     return Left(Failure(e.message));
-  //   }
-  // }
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await remoteDataSources.logout();
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, Account>> fetchProfile() async {

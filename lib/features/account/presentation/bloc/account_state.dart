@@ -13,6 +13,8 @@ final class AccountFailure extends AccountState {
   AccountFailure(this.message);
 }
 
+final class AccountLoggedOut extends AccountState {}
+
 final class AccountProfileLoad extends AccountState {
   final Account accountProfile;
 
