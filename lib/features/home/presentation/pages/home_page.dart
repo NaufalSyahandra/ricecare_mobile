@@ -47,15 +47,22 @@ class _HomePageState extends State<HomePage> {
         child: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
                 colors: [
                   AppPallete.buttonColor,
-                  AppPallete.buttonHighlightColor,
+                  AppPallete.primaryColorLight,
                 ],
-                begin: Alignment.topLeft,
+                begin: Alignment.topRight,
                 end: Alignment.bottomRight,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3), // Warna hijau tipis
+                  blurRadius: 8.0,
+                  offset: const Offset(0, 4), // Posisi shadow
+                ),
+              ],
             ),
             child: Center(
               child: Row(
@@ -66,8 +73,7 @@ class _HomePageState extends State<HomePage> {
                     child: ClipOval(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: AppPallete.accentColor, width: 3),
+                          border: Border.all(color: Colors.black26, width: 3),
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
@@ -78,14 +84,14 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         child: CircleAvatar(
-                          radius: 40,
+                          radius: 47,
                           backgroundImage: _profilePicture != null
                               ? NetworkImage(_profilePicture!)
                               : const AssetImage('assets/images/profile.png')
                                   as ImageProvider,
                           child: _profilePicture == null
                               ? const Icon(Icons.person,
-                                  size: 40, color: Colors.white)
+                                  size: 47, color: Colors.white)
                               : null,
                         ),
                       ),
@@ -102,15 +108,15 @@ class _HomePageState extends State<HomePage> {
                           RichText(
                             text: TextSpan(
                               text: "Selamat datang, ",
-                              style: GoogleFonts.lato(
+                              style: GoogleFonts.raleway(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24,
                                 color: AppPallete.primaryTextColor,
                               ),
                               children: [
                                 TextSpan(
-                                  text: "${_userName ?? 'Loading...'}!",
-                                  style: GoogleFonts.lato(
+                                  text: _userName ?? 'Loading...',
+                                  style: GoogleFonts.radioCanada(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 24,
                                     color: AppPallete.primaryTextColor,
@@ -119,14 +125,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             overflow: TextOverflow.visible,
-                          ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            "Temukan informasi dan bantuan di sini.",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: AppPallete.darkBackgroundColor,
-                            ),
                           ),
                         ],
                       ),
