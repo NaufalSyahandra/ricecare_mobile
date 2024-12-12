@@ -1,4 +1,4 @@
-// lib/features/home/presentation/widgets/camera_controls.dart
+// CameraControls widget remains the same
 import 'package:flutter/material.dart';
 
 class CameraControls extends StatelessWidget {
@@ -61,8 +61,7 @@ class CameraControls extends StatelessWidget {
             onTap: onToggleFlash,
             child: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.5),
-              child: const Icon(Icons.flash_off,
-                  color: Colors.white), // Ganti dengan logika flash
+              child: const Icon(Icons.flash_off, color: Colors.white),
             ),
           ),
         ),

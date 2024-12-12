@@ -8,6 +8,7 @@ import 'package:ricecare_mobile/features/auth/presentation/pages/signin_page.dar
 import 'package:ricecare_mobile/features/auth/presentation/pages/signup_page.dart';
 import 'package:ricecare_mobile/features/history/presentation/bloc/history_bloc.dart';
 import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ricecare_mobile/features/scan/presentation/bloc/scan_bloc.dart';
 import 'package:ricecare_mobile/init_dependencies.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -41,6 +42,10 @@ void main() async {
 
       BlocProvider(
         create: (context) => serviceLocator<HistoryBloc>(),
+      ),
+
+      BlocProvider(
+        create: (context) => serviceLocator<ScanBloc>(),
       ),
     ],
     child: const MyApp(),

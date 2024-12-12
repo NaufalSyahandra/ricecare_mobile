@@ -32,7 +32,7 @@ class ApiClient {
 
     // Add the file to the request
     request.files.add(http.MultipartFile.fromBytes(
-      'file',
+      'image',
       fileBytes,
       filename: 'upload.jpg',
       contentType: MediaType('image', 'jpeg'),

@@ -23,7 +23,7 @@ class ScanRemoteDataSourceImpl implements ScanRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      return ScanModel.fromJson(json.decode(response.body)['data']);
+      return ScanModel.fromJson(json.decode(response.body));
     } else {
       final errorMessage = json.decode(response.body);
       throw ServerException('Terjadi error saat scan: ${errorMessage['message']}');

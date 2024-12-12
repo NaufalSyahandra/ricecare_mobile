@@ -18,6 +18,11 @@ import 'package:ricecare_mobile/features/home/data/repositories/home_repository_
 import 'package:ricecare_mobile/features/home/domain/repositories/home_repository.dart';
 import 'package:ricecare_mobile/features/home/domain/usecase/get_home_data.dart';
 import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ricecare_mobile/features/scan/data/datasources/scan_remote_datasources.dart';
+import 'package:ricecare_mobile/features/scan/data/repositories/scan_repository_impl.dart';
+import 'package:ricecare_mobile/features/scan/domain/repositories/scan_repository.dart';
+import 'package:ricecare_mobile/features/scan/domain/usecases/upload_scan_usecase.dart';
+import 'package:ricecare_mobile/features/scan/presentation/bloc/scan_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ricecare_mobile/core/api/api_client.dart';
 import 'package:ricecare_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -26,6 +31,8 @@ import 'package:ricecare_mobile/features/auth/domain/repositories/auth_repositor
 import 'package:ricecare_mobile/features/auth/domain/usecase/user_signin.dart';
 import 'package:ricecare_mobile/features/auth/domain/usecase/user_signup.dart';
 import 'package:ricecare_mobile/features/auth/presentation/bloc/auth_bloc.dart';
+
+import 'core/error/network_info.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -46,6 +53,7 @@ Future<void> initDependencies() async {
   _initAccount();
   _initHome();
   _initHistory();
+  _initScan();
 }
 
 void _initAuth() {
@@ -135,6 +143,39 @@ void _initHistory() {
     ..registerFactory<HistoryBloc>(
           () => HistoryBloc(
         getDetectionHistory: serviceLocator(),
+      ),
+    );
+}
+
+void _initScan() {
+  serviceLocator
+  // Register NetworkInfo
+    ..registerFactory<NetworkInfo>(
+          () => NetworkInfoImpl(),
+    )
+
+  // Data Source
+    ..registerFactory<ScanRemoteDataSource>(
+          () => ScanRemoteDataSourceImpl(serviceLocator<ApiClient>()),
+    )
+
+  // Repository
+    ..registerFactory<ScanRepository>(
+          () => ScanRepositoryImpl(
+        remoteDataSource: serviceLocator(),
+        networkInfo: serviceLocator(),
+      ),
+    )
+
+  // Usecase
+    ..registerFactory<UploadScanUseCase>(
+          () => UploadScanUseCase(serviceLocator()),
+    )
+
+  // Bloc
+    ..registerFactory<ScanBloc>(
+          () => ScanBloc(
+          uploadScanUseCase: serviceLocator(),
       ),
     );
 }
