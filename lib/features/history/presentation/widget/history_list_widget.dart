@@ -19,7 +19,8 @@ class HistoryList extends StatelessWidget {
           Map<String, List<DetectionHistory>> groupedHistory = {};
           for (var item in state.history) {
             DateTime detectionDate = DateTime.parse(item.detection_date);
-            String date = DateFormat('dd MMMM yyyy').format(detectionDate);
+            String date =
+                DateFormat('EEEE, dd MMMM yyyy', 'id').format(detectionDate);
             groupedHistory.putIfAbsent(date, () => []).add(item);
           }
 
@@ -125,7 +126,7 @@ class HistoryList extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          DateFormat('dd MMM').format(
+                                          DateFormat('dd MMM', 'id').format(
                                               DateTime.parse(
                                                   item.detection_date)),
                                           style: const TextStyle(
@@ -135,7 +136,7 @@ class HistoryList extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          DateFormat('HH:mm').format(
+                                          DateFormat('HH:mm', 'id').format(
                                               DateTime.parse(
                                                   item.detection_date)),
                                           style: const TextStyle(

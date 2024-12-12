@@ -11,17 +11,19 @@ import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ricecare_mobile/features/scan/presentation/bloc/scan_bloc.dart';
 import 'package:ricecare_mobile/init_dependencies.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/domain/usecase/user_signup.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/screen/presentation/pages/splashscreen.dart';
-
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 // import 'package:ricecare_mobile/screens/add_note/add_note_screen.dart';
 // import 'package:ricecare_mobile/screens/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id', null);
 
   await initDependencies();
 
@@ -59,6 +61,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: const Locale('id'),
+      supportedLocales: const [
+        Locale('id', ''), // Indonesia
+        Locale('en', ''), // English
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: AppTheme.lightThemeMode,
       title: 'RiceCare',
       debugShowCheckedModeBanner: false,
