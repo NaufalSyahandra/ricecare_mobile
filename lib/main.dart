@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ricecare_mobile/core/secrets/app_secrets.dart';
 import 'package:ricecare_mobile/features/account/presentation/bloc/account_bloc.dart'; // Import AccountBloc
@@ -23,6 +24,10 @@ import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.teal, // Set the color for the status bar
+    statusBarIconBrightness: Brightness.dark, // Set to light for dark backgrounds
+  ));
   await initializeDateFormatting('id', null);
 
   await initDependencies();

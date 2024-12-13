@@ -2,12 +2,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart'; // For loading spinner
 import 'package:ricecare_mobile/features/home/presentation/widget/navbar_widget.dart';
 import 'package:ricecare_mobile/features/scan/presentation/bloc/scan_bloc.dart';
 import 'package:ricecare_mobile/features/scan/presentation/page/result_page.dart';
 import 'package:ricecare_mobile/features/scan/presentation/widget/camera_controls_widget.dart';
-import 'package:ricecare_mobile/features/scan/domain/entities/scan.dart';
+import 'package:ricecare_mobile/features/scan/presentation/widget/image_confirmation_dialog.dart'; // Import your dialog
 
 class ScanPage extends StatefulWidget {
   const ScanPage({super.key});
@@ -22,7 +22,6 @@ class _ScanPageState extends State<ScanPage> {
   bool _isCameraInitialized = false;
   bool _isLoading = false;
   Uint8List? _imageBytes;
-  bool _isFlashOn = false; // Variabel untuk status flash
 
   @override
   void initState() {
@@ -75,105 +74,61 @@ class _ScanPageState extends State<ScanPage> {
                 Positioned.fill(child: CameraPreview(_cameraController!))
               else
                 const Center(child: CircularProgressIndicator()),
+              if (_isLoading || state is ScanLoading)
+                const Center(
+                  child: SpinKitCircle(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
+                ),
               CameraControls(
-                isFlashOn: _isFlashOn, // Kirim status flash ke widget
                 onToggleFlash: () {
-                  if (_cameraController != null &&
-                      _cameraController!.value.isInitialized) {
-                    setState(() {
-                      _isFlashOn = !_isFlashOn; // Toggle status flash
-                    });
-                    _cameraController!.setFlashMode(
-                      _isFlashOn ? FlashMode.torch : FlashMode.off,
-                    );
-                  }
+// Handle flash toggle
                 },
                 onTakePicture: () async {
                   if (_cameraController != null &&
                       _cameraController!.value.isInitialized) {
                     setState(() {
-                      _isLoading = true;
+                      _isLoading = true; // Set loading true
                     });
 
                     try {
                       final XFile file = await _cameraController!.takePicture();
                       _imageBytes = await file.readAsBytes();
-                      _showImageConfirmationDialog(context);
+
+                      // Show the confirmation dialog
+                      showImageConfirmationDialog(
+                        context,
+                        _imageBytes,
+                        () {
+                          Navigator.of(context).pop(); // Retake the picture
+                          setState(() {
+                            _isLoading = false; // Reset loading state
+                            _imageBytes = null; // Clear image bytes
+                          });
+                        },
+                        () {
+                          context
+                              .read<ScanBloc>()
+                              .add(UploadScanEvent(imageBytes: _imageBytes!));
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                      );
                     } catch (e) {
-                      print('Gagal mengambil gambar: $e');
+                      print('Failed to take picture: $e');
                       setState(() {
-                        _isLoading = false;
+                        _isLoading = false; // Set loading false
                       });
                     }
                   }
                 },
                 onPickImage: () async {
-                  final ImagePicker _picker = ImagePicker();
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-
-                  if (image != null) {
-                    _imageBytes = await image.readAsBytes();
-                    _showImageConfirmationDialog(context);
-                  }
+                  // Handle picking image from gallery
                 },
               ),
-              if (_isLoading) const Center(child: CircularProgressIndicator()),
             ],
           ),
           bottomNavigationBar: const NavbarWidget(initialIndex: 2),
-        );
-      },
-    );
-  }
-
-  void _showImageConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            height: 300,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Konfirmasi Gambar', style: TextStyle(fontSize: 18)),
-                const SizedBox(height: 16),
-                if (_imageBytes != null)
-                  Image.memory(
-                    _imageBytes!,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Ambil ulang gambar
-                      },
-                      child: const Text('Ambil Ulang'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<ScanBloc>()
-                            .add(UploadScanEvent(imageBytes: _imageBytes!));
-                        Navigator.of(context).pop(); // Tutup dialog
-                      },
-                      child: const Text('Proses'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         );
       },
     );

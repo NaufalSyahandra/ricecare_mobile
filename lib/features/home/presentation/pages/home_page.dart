@@ -43,74 +43,75 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(150),
+        preferredSize: const Size.fromHeight(100), // Reduced height
         child: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
                 colors: [
-                  AppPallete.buttonColor,
-                  AppPallete.primaryColorLight,
+                  AppPallete.backgroundColor,
+                  AppPallete.backgroundColor,
                 ],
                 begin: Alignment.topRight,
                 end: Alignment.bottomRight,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3), // Warna hijau tipis
-                  blurRadius: 8.0,
-                  offset: const Offset(0, 4), // Posisi shadow
+              border: Border(
+                bottom: BorderSide(
+                  color: AppPallete.darkBackgroundColor,
+                  width: 0.4,
                 ),
-              ],
+              ),
             ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ClipOval(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black26, width: 3),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 8.0,
-                              spreadRadius: 1.0,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 47,
-                          backgroundImage: _profilePicture != null
-                              ? NetworkImage(_profilePicture!)
-                              : const AssetImage('assets/images/profile.png')
-                                  as ImageProvider,
-                          child: _profilePicture == null
-                              ? const Icon(Icons.person,
-                                  size: 47, color: Colors.white)
-                              : null,
-                        ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0), // Reduced padding
+                  child: ClipOval(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black26, width: 3),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 8.0,
+                            spreadRadius: 1.0,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 30, // Reduced radius
+                        backgroundImage: _profilePicture != null
+                            ? NetworkImage(_profilePicture!)
+                            : const AssetImage('assets/images/profile.png')
+                                as ImageProvider,
+                        child: _profilePicture == null
+                            ? const Icon(Icons.person,
+                                size: 40, color: Colors.white)
+                            : null,
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Menggunakan RichText untuk menebalkan
-                          RichText(
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    // Reduced padding
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.65,
+                          ),
+                          child: RichText(
                             text: TextSpan(
                               text: "Selamat datang, ",
                               style: GoogleFonts.raleway(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 24,
+                                fontSize: 20, // Reduced font size
                                 color: AppPallete.primaryTextColor,
                               ),
                               children: [
@@ -118,20 +119,19 @@ class _HomePageState extends State<HomePage> {
                                   text: _userName ?? 'Loading...',
                                   style: GoogleFonts.radioCanada(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 24,
+                                    fontSize: 20, // Reduced font size
                                     color: AppPallete.primaryTextColor,
                                   ),
                                 ),
                               ],
                             ),
-                            overflow: TextOverflow.visible,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           backgroundColor: Colors.transparent,
