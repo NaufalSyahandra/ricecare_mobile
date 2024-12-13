@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ricecare_mobile/features/home/presentation/widget/navbar_widget.dart';
 import 'package:ricecare_mobile/features/scan/presentation/bloc/scan_bloc.dart';
 import 'package:ricecare_mobile/features/scan/presentation/page/result_page.dart';
@@ -21,6 +22,7 @@ class _ScanPageState extends State<ScanPage> {
   bool _isCameraInitialized = false;
   bool _isLoading = false;
   Uint8List? _imageBytes;
+  bool _isFlashOn = false; // Variabel untuk status flash
 
   @override
   void initState() {
@@ -53,15 +55,14 @@ class _ScanPageState extends State<ScanPage> {
     return BlocConsumer<ScanBloc, ScanState>(
       listener: (context, state) {
         if (state is ScanError) {
-          // Tampilkan pesan kesalahan
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
         } else if (state is ScanUploaded) {
-          // Navigasi ke halaman baru setelah pemrosesan
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ResultPage(scan: state.scan)),
+            MaterialPageRoute(
+                builder: (context) => ResultPage(scan: state.scan)),
           );
         }
       },
@@ -75,35 +76,49 @@ class _ScanPageState extends State<ScanPage> {
               else
                 const Center(child: CircularProgressIndicator()),
               CameraControls(
+                isFlashOn: _isFlashOn, // Kirim status flash ke widget
                 onToggleFlash: () {
-                  // Menangani toggle flash
+                  if (_cameraController != null &&
+                      _cameraController!.value.isInitialized) {
+                    setState(() {
+                      _isFlashOn = !_isFlashOn; // Toggle status flash
+                    });
+                    _cameraController!.setFlashMode(
+                      _isFlashOn ? FlashMode.torch : FlashMode.off,
+                    );
+                  }
                 },
                 onTakePicture: () async {
                   if (_cameraController != null &&
                       _cameraController!.value.isInitialized) {
                     setState(() {
-                      _isLoading = true; // Set loading true
+                      _isLoading = true;
                     });
 
                     try {
                       final XFile file = await _cameraController!.takePicture();
                       _imageBytes = await file.readAsBytes();
-
-                      // Tampilkan gambar untuk konfirmasi
                       _showImageConfirmationDialog(context);
                     } catch (e) {
                       print('Gagal mengambil gambar: $e');
                       setState(() {
-                        _isLoading = false; // Set loading false
+                        _isLoading = false;
                       });
                     }
                   }
                 },
                 onPickImage: () async {
-                  // Menangani pemilihan gambar dari galeri
+                  final ImagePicker _picker = ImagePicker();
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+
+                  if (image != null) {
+                    _imageBytes = await image.readAsBytes();
+                    _showImageConfirmationDialog(context);
+                  }
                 },
               ),
-              if (_isLoading) const Center(child: CircularProgressIndicator()), // Tampilkan loading
+              if (_isLoading) const Center(child: CircularProgressIndicator()),
             ],
           ),
           bottomNavigationBar: const NavbarWidget(initialIndex: 2),
@@ -147,8 +162,9 @@ class _ScanPageState extends State<ScanPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Kirim gambar ke bloc untuk diupload
-                        context.read<ScanBloc>().add(UploadScanEvent(imageBytes: _imageBytes!));
+                        context
+                            .read<ScanBloc>()
+                            .add(UploadScanEvent(imageBytes: _imageBytes!));
                         Navigator.of(context).pop(); // Tutup dialog
                       },
                       child: const Text('Proses'),

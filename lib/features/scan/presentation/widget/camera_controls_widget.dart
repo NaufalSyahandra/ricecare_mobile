@@ -1,13 +1,14 @@
-// CameraControls widget remains the same
 import 'package:flutter/material.dart';
 
 class CameraControls extends StatelessWidget {
+  final bool isFlashOn; // Status flash
   final VoidCallback onToggleFlash;
   final VoidCallback onTakePicture;
   final VoidCallback onPickImage;
 
   const CameraControls({
     super.key,
+    required this.isFlashOn, // Tambahkan parameter untuk status flash
     required this.onToggleFlash,
     required this.onTakePicture,
     required this.onPickImage,
@@ -61,7 +62,11 @@ class CameraControls extends StatelessWidget {
             onTap: onToggleFlash,
             child: CircleAvatar(
               backgroundColor: Colors.grey.withOpacity(0.5),
-              child: const Icon(Icons.flash_off, color: Colors.white),
+              child: Icon(
+                isFlashOn ? Icons.flash_on : Icons.flash_off,
+                // Ganti ikon berdasarkan status
+                color: Colors.white,
+              ),
             ),
           ),
         ),
