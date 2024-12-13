@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ricecare_mobile/core/theme/app_pallete.dart';
 import 'package:ricecare_mobile/features/history/domain/entities/detection_history.dart';
+import 'package:ricecare_mobile/features/history/presentation/widget/symptoms_section.dart';
 import '../widget/prevention_section.dart';
 import '../widget/treatment_section.dart';
 
@@ -18,7 +19,7 @@ class HistoryDetectionPage extends StatefulWidget {
 }
 
 class _HistoryDetectionPageState extends State<HistoryDetectionPage> {
-  int _selectedSegment = 0; // Menyimpan segment yang dipilih
+  int _selectedSegment = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +68,8 @@ class _HistoryDetectionPageState extends State<HistoryDetectionPage> {
   }
 
   Widget _buildCard() {
+    String name_disease = widget.historyDetails.disease.name_disease;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -92,16 +95,15 @@ class _HistoryDetectionPageState extends State<HistoryDetectionPage> {
             const SizedBox(height: 12),
             const Divider(thickness: 1, color: Colors.grey),
             const SizedBox(height: 12),
-            _buildSymptoms(),
+            SymptomsSection(name_disease: name_disease),
             const SizedBox(height: 20),
             const Divider(thickness: 1, color: Colors.grey),
             const SizedBox(height: 12),
             _buildSegmentControl(),
             const SizedBox(height: 16.0),
             _selectedSegment == 0
-                ? PreventionSection(
-                    prevention: widget.historyDetails.prevention)
-                : const TreatmentSection(),
+                ? PreventionSection(name_disease: name_disease)
+                : TreatmentSection(name_disease: name_disease),
           ],
         ),
       ),
@@ -116,26 +118,6 @@ class _HistoryDetectionPageState extends State<HistoryDetectionPage> {
         fontWeight: FontWeight.bold,
         color: Colors.black,
       ),
-    );
-  }
-
-  Widget _buildSymptoms() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Gejala:',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          widget.historyDetails.disease.symptoms,
-          style: const TextStyle(fontSize: 16),
-        ),
-      ],
     );
   }
 

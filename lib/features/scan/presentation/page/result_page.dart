@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ricecare_mobile/core/theme/app_pallete.dart';
 import 'package:ricecare_mobile/features/history/presentation/pages/history_page.dart';
 import 'package:ricecare_mobile/features/history/presentation/widget/prevention_section.dart';
+import 'package:ricecare_mobile/features/history/presentation/widget/symptoms_section.dart';
 import 'package:ricecare_mobile/features/history/presentation/widget/treatment_section.dart';
 import 'package:ricecare_mobile/features/scan/domain/entities/scan.dart';
 
@@ -76,6 +77,8 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Widget _buildCard() {
+    String name_disease = widget.scan.name_disease;
+    ;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -101,15 +104,15 @@ class _ResultPageState extends State<ResultPage> {
             const SizedBox(height: 12),
             const Divider(thickness: 1, color: Colors.grey),
             const SizedBox(height: 12),
-            _buildSymptoms(),
+            SymptomsSection(name_disease: name_disease),
             const SizedBox(height: 20),
             const Divider(thickness: 1, color: Colors.grey),
             const SizedBox(height: 12),
             _buildSegmentControl(),
             const SizedBox(height: 16.0),
             _selectedSegment == 0
-                ? PreventionSection(prevention: widget.scan.prevention)
-                : TreatmentSection(),
+                ? PreventionSection(name_disease: name_disease)
+                : TreatmentSection(name_disease: name_disease),
           ],
         ),
       ),
@@ -124,26 +127,6 @@ class _ResultPageState extends State<ResultPage> {
         fontWeight: FontWeight.bold,
         color: Colors.black,
       ),
-    );
-  }
-
-  Widget _buildSymptoms() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Gejala:',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          widget.scan.symptoms,
-          style: const TextStyle(fontSize: 16),
-        ),
-      ],
     );
   }
 
