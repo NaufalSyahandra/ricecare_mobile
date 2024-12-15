@@ -12,6 +12,12 @@ class HomeLoadedState extends HomeState {
   HomeLoadedState(this.home);
 }
 
+class HomeDiseaseLoadedState extends HomeState {
+  final List<DiseaseEntity> diseases;
+
+  HomeDiseaseLoadedState(this.diseases);
+}
+
 class HomeErrorState extends HomeState {
   final String message;
 

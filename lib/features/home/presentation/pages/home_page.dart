@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               border: Border(
                 bottom: BorderSide(
                   color: AppPallete.darkBackgroundColor,
-                  width: 0.4,
+                  width: 0.2,
                 ),
               ),
             ),
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      backgroundColor: AppPallete.scaffoldBackgroundColor,
+      // backgroundColor: AppPallete.scaffoldBackgroundColor,
       bottomNavigationBar: const NavbarWidget(initialIndex: 0),
     );
   }

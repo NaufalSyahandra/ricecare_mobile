@@ -16,6 +16,7 @@ import 'package:ricecare_mobile/features/history/presentation/bloc/history_bloc.
 import 'package:ricecare_mobile/features/home/data/datasources/home_remote_data_source.dart';
 import 'package:ricecare_mobile/features/home/data/repositories/home_repository_impl.dart';
 import 'package:ricecare_mobile/features/home/domain/repositories/home_repository.dart';
+import 'package:ricecare_mobile/features/home/domain/usecase/get_disease.dart';
 import 'package:ricecare_mobile/features/home/domain/usecase/get_home_data.dart';
 import 'package:ricecare_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ricecare_mobile/features/scan/data/datasources/scan_remote_datasources.dart';
@@ -46,7 +47,7 @@ Future<void> initDependencies() async {
 
   // Register the ApiClient
   serviceLocator.registerLazySingleton<ApiClient>(
-        () => ApiClient(serviceLocator<http.Client>()),
+    () => ApiClient(serviceLocator<http.Client>()),
   );
 
   _initAuth();
@@ -59,24 +60,20 @@ Future<void> initDependencies() async {
 void _initAuth() {
   serviceLocator
 
-  // Datasource's
+    // Datasource's
     ..registerFactory<AuthRemoteDatasource>(
-            () => AuthRemoteDatasourceImpl(serviceLocator<ApiClient>()))
+        () => AuthRemoteDatasourceImpl(serviceLocator<ApiClient>()))
 
-  // Repositories
+    // Repositories
     ..registerFactory<AuthRepository>(
-            () => AuthRepositoryImpl(serviceLocator()))
+        () => AuthRepositoryImpl(serviceLocator()))
 
-  // Use cases
-    ..registerFactory<UserSignup>(() =>
-        UserSignup(serviceLocator()))
+    // Use cases
+    ..registerFactory<UserSignup>(() => UserSignup(serviceLocator()))
+    ..registerFactory<UserSignIn>(() => UserSignIn(serviceLocator()))
 
-    ..registerFactory<UserSignIn>(() =>
-        UserSignIn(serviceLocator()))
-
-  // Bloc
-    ..registerFactory<AuthBloc>(() =>
-        AuthBloc(
+    // Bloc
+    ..registerFactory<AuthBloc>(() => AuthBloc(
           userSignup: serviceLocator(),
           userSignIn: serviceLocator(),
         ));
@@ -84,64 +81,64 @@ void _initAuth() {
 
 void _initAccount() {
   serviceLocator
-  // Data Source
+    // Data Source
     ..registerFactory<AccountRemoteDataSources>(
-          () => AccountRemoteDataSourcesImpl(serviceLocator<ApiClient>()),
+      () => AccountRemoteDataSourcesImpl(serviceLocator<ApiClient>()),
     )
-  // Repository
+    // Repository
     ..registerFactory<AccountRepository>(
-          () => AccountRepositoryImpl(serviceLocator()),
+      () => AccountRepositoryImpl(serviceLocator()),
     )
-  // UseCase
-    ..registerFactory<AccountLogout>(
-            () => AccountLogout(serviceLocator()))
-
-    ..registerFactory<FetchProfile>(
-            () => FetchProfile(serviceLocator()))
-
-    ..registerFactory<UpdateProfile>(
-            () => UpdateProfile(serviceLocator()))
-
-  ..registerFactory<UpdatePassword>(
-          () => UpdatePassword(serviceLocator())
-  )
-  // Bloc
+    // UseCase
+    ..registerFactory<AccountLogout>(() => AccountLogout(serviceLocator()))
+    ..registerFactory<FetchProfile>(() => FetchProfile(serviceLocator()))
+    ..registerFactory<UpdateProfile>(() => UpdateProfile(serviceLocator()))
+    ..registerFactory<UpdatePassword>(() => UpdatePassword(serviceLocator()))
+    // Bloc
     ..registerFactory<AccountBloc>(
-          () =>
-          AccountBloc(
-            fetchProfile: serviceLocator(),
-            accountLogout: serviceLocator(),
-            updateProfile: serviceLocator(),
-            updatePassword: serviceLocator()
-          ),
+      () => AccountBloc(
+          fetchProfile: serviceLocator(),
+          accountLogout: serviceLocator(),
+          updateProfile: serviceLocator(),
+          updatePassword: serviceLocator()),
     );
 }
 
 void _initHome() {
   serviceLocator
-    ..registerFactory<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(serviceLocator<ApiClient>()))
-    ..registerFactory<HomeRepository>(() => HomeRepositoryImpl(serviceLocator<HomeRemoteDataSource>()))
-    ..registerFactory<GetHomeData>(() => GetHomeData(serviceLocator<HomeRepository>()))
-    ..registerFactory<HomeBloc>(() => HomeBloc(getHomeData: serviceLocator<GetHomeData>()));
+    ..registerFactory<HomeRemoteDataSource>(
+        () => HomeRemoteDataSourceImpl(serviceLocator<ApiClient>()))
+    ..registerFactory<HomeRepository>(
+        () => HomeRepositoryImpl(serviceLocator<HomeRemoteDataSource>()))
+    ..registerFactory<GetHomeData>(
+        () => GetHomeData(serviceLocator<HomeRepository>()))
+    ..registerFactory<GetDisease>(
+        () => GetDisease(serviceLocator<HomeRepository>()))
+    ..registerFactory<HomeBloc>(
+      () => HomeBloc(
+        getHomeData: serviceLocator<GetHomeData>(),
+        getDisease: serviceLocator<GetDisease>(),
+      ),
+    );
 }
 
 void _initHistory() {
   serviceLocator
-  // Data Source
+    // Data Source
     ..registerFactory<HistoryRemoteDatasource>(
-          () => HistoryRemoteDatasourceImpl(serviceLocator<ApiClient>()),
+      () => HistoryRemoteDatasourceImpl(serviceLocator<ApiClient>()),
     )
-  // Repository
+    // Repository
     ..registerFactory<HistoryRepository>(
-          () => HistoryRepositoryImpl(serviceLocator()),
+      () => HistoryRepositoryImpl(serviceLocator()),
     )
-  // UseCase
+    // UseCase
     ..registerFactory<GetDetectionHistory>(
-          () => GetDetectionHistory(repository: serviceLocator()),
+      () => GetDetectionHistory(repository: serviceLocator()),
     )
-  // Bloc
+    // Bloc
     ..registerFactory<HistoryBloc>(
-          () => HistoryBloc(
+      () => HistoryBloc(
         getDetectionHistory: serviceLocator(),
       ),
     );
@@ -149,33 +146,33 @@ void _initHistory() {
 
 void _initScan() {
   serviceLocator
-  // Register NetworkInfo
+    // Register NetworkInfo
     ..registerFactory<NetworkInfo>(
-          () => NetworkInfoImpl(),
+      () => NetworkInfoImpl(),
     )
 
-  // Data Source
+    // Data Source
     ..registerFactory<ScanRemoteDataSource>(
-          () => ScanRemoteDataSourceImpl(serviceLocator<ApiClient>()),
+      () => ScanRemoteDataSourceImpl(serviceLocator<ApiClient>()),
     )
 
-  // Repository
+    // Repository
     ..registerFactory<ScanRepository>(
-          () => ScanRepositoryImpl(
+      () => ScanRepositoryImpl(
         remoteDataSource: serviceLocator(),
         networkInfo: serviceLocator(),
       ),
     )
 
-  // Usecase
+    // Usecase
     ..registerFactory<UploadScanUseCase>(
-          () => UploadScanUseCase(serviceLocator()),
+      () => UploadScanUseCase(serviceLocator()),
     )
 
-  // Bloc
+    // Bloc
     ..registerFactory<ScanBloc>(
-          () => ScanBloc(
-          uploadScanUseCase: serviceLocator(),
+      () => ScanBloc(
+        uploadScanUseCase: serviceLocator(),
       ),
     );
 }

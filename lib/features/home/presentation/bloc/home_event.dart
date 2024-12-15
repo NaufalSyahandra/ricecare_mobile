@@ -3,3 +3,5 @@ part of 'home_bloc.dart';
 abstract class HomeEvent {}
 
 class LoadHomeEvent extends HomeEvent {}
+
+class LoadDiseaseEvent extends HomeEvent {}
